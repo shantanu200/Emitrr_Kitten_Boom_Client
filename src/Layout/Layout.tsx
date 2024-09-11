@@ -1,0 +1,210 @@
+import { Link, useLocation } from "react-router-dom";
+import {
+  Home,
+  LineChart,
+  Menu,
+  Package,
+  Package2,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useMemo } from "react";
+import { Cat, GameController, Ranking, Spade } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useUserDetails } from "@/query/functions/User.function";
+
+export const description =
+  "A products dashboard with a sidebar navigation and a main content area. The dashboard has a header with a search input and a user menu. The sidebar has a logo, navigation links, and a card with a call to action. The main content area shows an empty state with a call to action.";
+
+interface Props {
+  children: React.ReactNode;
+}
+
+type SideBarRoute = {
+  id: number;
+  name: string;
+  keyword: string;
+  route: string;
+  icon: React.ReactNode;
+  isActive: boolean;
+};
+
+const SidebarRoutes: SideBarRoute[] = [
+  {
+    id: 1,
+    name: "Dashboard",
+    keyword: "",
+    route: "/",
+    icon: <Home />,
+    isActive: true,
+  },
+  {
+    id: 2,
+    name: "Game",
+    keyword: "game",
+    route: "/instruction",
+    icon: <GameController className="h-6 w-6" />,
+    isActive: false,
+  },
+  {
+    id: 3,
+    name: "Leaderboard",
+    keyword: "leaderboard",
+    route: "/leaderboard",
+    icon: <Ranking className="h-6 w-6" />,
+    isActive: false,
+  },
+];
+
+export function Layout({ children }: Props) {
+  const { pathname } = useLocation();
+
+  const user = useUserDetails();
+
+  const _routes = useMemo(() => {
+    const currRoute = pathname.split("/")[1] || "";
+    return SidebarRoutes.map((route) => {
+      return {
+        ...route,
+        isActive: route.keyword === currRoute,
+      };
+    });
+  }, [pathname]);
+
+  return (
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-muted/40 md:block sticky top-0 h-screen">
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+            <Link to="/" className="flex items-center gap-2 font-semibold">
+              <Cat className="h-6 w-6 text-primary" weight="bold" />
+              <span className="text-xl">KittenBoom</span>
+            </Link>
+          </div>
+          <div className="flex-1">
+            <nav className="grid gap-y-4 items-start px-2 text-sm font-medium lg:px-4">
+              {_routes?.map((item) => (
+                <Link
+                  to={item.route}
+                  key={item.id}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:text-primary",
+                    item.isActive
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {item.icon}
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+          </div>
+          <div className="mt-auto p-4">
+            <Card>
+              <CardHeader className="flex">
+                <div className="flex items-center gap-x-4">
+                  <Avatar>
+                    <AvatarFallback>
+                      {user?.data?.username?.[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <CardTitle>{user?.data?.username}</CardTitle>
+                </div>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 md:hidden"
+              >
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="flex flex-col">
+              <nav className="grid gap-2 text-lg font-medium">
+                <Link
+                  to="#"
+                  className="flex items-center gap-2 text-lg font-semibold"
+                >
+                  <Package2 className="h-6 w-6" />
+                  <span className="sr-only">Acme Inc</span>
+                </Link>
+                <Link
+                  to="#"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  <Home className="h-5 w-5" />
+                  Dashboard
+                </Link>
+                <Link
+                  to="#"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  Orders
+                  <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                    6
+                  </Badge>
+                </Link>
+                <Link
+                  to="#"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  <Package className="h-5 w-5" />
+                  Products
+                </Link>
+                <Link
+                  to="#"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  <Users className="h-5 w-5" />
+                  Customers
+                </Link>
+                <Link
+                  to="#"
+                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                >
+                  <LineChart className="h-5 w-5" />
+                  Analytics
+                </Link>
+              </nav>
+              <div className="mt-auto">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>UserName</CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
+            </SheetContent>
+          </Sheet>
+          <div className="flex w-full justify-end">
+            <Link to={`/instruction`}>
+              <Button className="flex gap-x-2">
+                <Spade className="h-4 w-4" />
+                <span>Play Game</span>
+              </Button>
+            </Link>
+          </div>
+        </header>
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}

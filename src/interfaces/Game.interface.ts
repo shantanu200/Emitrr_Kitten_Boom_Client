@@ -1,0 +1,1 @@
+export type GameAction = "Over" | "Win" | "Shuffle"
