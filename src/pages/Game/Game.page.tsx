@@ -15,6 +15,7 @@ import { Bomb, Cards } from "@phosphor-icons/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageLoading from "../PageLoading";
+import ErrorPage from "@/components/ui/errorPage";
 
 const GAME_STATUS = {
   LOST: "LOST",
@@ -116,6 +117,12 @@ const Game: React.FC = () => {
 
   if (gameBoard?.data?.status === GAME_STATUS.LOST) {
     return <GameOver open />;
+  }
+
+  if(gameBoard.isError){
+    return <div className="p-8">
+      <ErrorPage text="Game Details not found." />
+    </div>
   }
 
   return (
