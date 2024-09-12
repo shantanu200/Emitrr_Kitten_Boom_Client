@@ -38,11 +38,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/instruction",
-    element: <Instruction />,
+    element: (
+      <AuthContext>
+        <Instruction />
+      </AuthContext>
+    ),
   },
   {
     path: "/game/:id",
-    element: <Game />,
+    element: (
+      <AuthContext>
+        <Game />
+      </AuthContext>
+    ),
   },
 ]);
 
