@@ -29,9 +29,14 @@ const GameWin: React.FC<GameWinProps> = ({ open }) => {
             <Lottie animationData={GameWinner} />
           </div>
         </div>
-        <DialogFooter>
-          <Link className="w-full" to={`/instruction`}>
-            <Button className="w-full" size={"lg"}>
+        <DialogFooter className="gap-y-2">
+          <Link to={`/dashboard`} className="w-full lg:w-auto">
+            <Button variant={"destructive"} className="w-full" size={"lg"}>
+              Exit
+            </Button>
+          </Link>
+          <Link to={`/instruction`} className="w-full lg:w-auto">
+            <Button size={"lg"} className="w-full">
               Play Again
             </Button>
           </Link>

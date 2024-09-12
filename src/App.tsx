@@ -13,7 +13,7 @@ const Game = React.lazy(() => import("@/pages/Game/Game.page"));
 
 const router = createBrowserRouter([
   {
-    path: "/home",
+    path: "/",
     element: <Home />,
   },
   {
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "",
+        path: "/dashboard",
         element: <Dashboard />,
       },
       {

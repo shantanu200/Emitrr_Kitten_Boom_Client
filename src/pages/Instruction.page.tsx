@@ -12,7 +12,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ICreateGameBoard } from "@/interfaces/API.interface";
-import PageLoading from "@/pages/PageLoading";
 import { useUserDetails } from "@/query/functions/User.function";
 import useMutationQuery from "@/query/query.mutation";
 import { Spinner } from "@phosphor-icons/react";

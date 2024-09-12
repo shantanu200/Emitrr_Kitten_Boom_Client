@@ -29,7 +29,7 @@ const CardDialog: React.FC<CardDialogProps> = ({ card, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [card, onClose]);

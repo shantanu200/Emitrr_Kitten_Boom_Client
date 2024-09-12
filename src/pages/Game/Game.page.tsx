@@ -12,9 +12,15 @@ import { useGameDetails } from "@/query/functions/Game.function";
 import useMutationQuery from "@/query/query.mutation";
 import useTempStore from "@/store/store";
 import { Bomb, Cards } from "@phosphor-icons/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageLoading from "../PageLoading";
+
+const GAME_STATUS = {
+  LOST: "LOST",
+  WON: "WON",
+  ONGOING: "ONGOING",
+};
 
 const Game: React.FC = () => {
   const {
@@ -31,41 +37,40 @@ const Game: React.FC = () => {
     updateCardDeck,
     updateCardDrawn,
   } = useTempStore((state) => state);
-  const [open, setOpen] = useState<boolean>(false);
-  const [action, setAction] = useState<GameAction>();
+  const [_, setOpen] = useState<boolean>(false);
+  const [action, setAction] = useState<GameAction | null>(null);
   const { id } = useParams();
   const [updateStatus, setUpdateStatus] = useState<boolean>(false);
 
   const gameBoard = useGameDetails(String(id));
 
-  const { mutateAsync } = useMutationQuery<
+  const { mutateAsync: updateGameStatus } = useMutationQuery<
     string,
     Error,
     Partial<IStoreGameStatus>
   >("PATCH", `${API_ENDPOINT.STORE_GAME_RECORD}/${id}`);
 
-  const storeGameStatus = async () => {
+  const storeGameStatus = useCallback(async () => {
     const gameStatus: Partial<IStoreGameStatus> = {
       deck: deck.map((d) => d.keyword),
       moves: drawnCards.map((d) => d.keyword),
       defuseCount,
-      status: isGameOVer ? "LOST" : isGameWon ? "WON" : "ONGOING",
+      status: isGameOVer ? GAME_STATUS.LOST : isGameWon ? GAME_STATUS.WON : GAME_STATUS.ONGOING,
       isGameOver: isGameOVer || isGameWon,
     };
 
-    await mutateAsync(gameStatus);
-  };
+    await updateGameStatus(gameStatus);
+  }, [defuseCount, deck, drawnCards, isGameOVer, isGameWon, updateGameStatus]);
 
   useEffect(() => {
     if (updateStatus) {
       storeGameStatus();
       setUpdateStatus(false);
     }
-  }, [updateStatus]);
+  }, [updateStatus,storeGameStatus]);
 
   const handleCardDrwan = useCallback(() => {
     drawCard();
-
     setUpdateStatus(true);
   }, [drawCard, storeGameStatus]);
 
@@ -83,30 +88,33 @@ const Game: React.FC = () => {
     } else {
       generateDeck();
     }
-  }, [gameBoard?.data?.isGameOver]);
+  }, [gameBoard?.data?.isGameOver, updateCardDeck, updateCardDrawn, generateDeck]);
 
   useEffect(() => {
     if (isGameWon || isGameOVer || isGameReset) {
       const timer = setTimeout(() => {
         let status = isGameOVer ? "Over" : isGameWon ? "Win" : "Shuffle";
-        console.log(status);
         setAction(status as GameAction);
         setOpen(true);
-      }, 3000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
   }, [isGameOVer, isGameWon, isGameReset]);
 
+  const _drawnCard = useMemo(() => {
+    return drawnCards.reverse();
+  }, [drawnCards, handleCardDrwan]);
+
   if (gameBoard?.isLoading) {
     return <PageLoading />;
   }
 
-  if (gameBoard?.data?.status === "WON") {
+  if (gameBoard?.data?.status === GAME_STATUS.WON) {
     return <GameWin open />;
   }
 
-  if (gameBoard?.data?.status === "LOST") {
+  if (gameBoard?.data?.status === GAME_STATUS.LOST) {
     return <GameOver open />;
   }
 
@@ -132,7 +140,7 @@ const Game: React.FC = () => {
         <div className="flex flex-1 lg:h-[80vh] h-full w-full border-4 border-dashed rounded-xl p-4 items-center justify-center bg-muted/30">
           {drawnCards && drawnCards.length > 0 ? (
             <div className="grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 w-full gap-4">
-              {drawnCards?.reverse()?.map((card, idx) => (
+              {_drawnCard?.map((card, idx) => (
                 <GameCard key={idx} card={card} />
               ))}
             </div>

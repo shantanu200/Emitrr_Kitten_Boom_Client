@@ -20,7 +20,7 @@ export const CardStack: React.FC<{
 
   return (
     <div className="relative  h-60 w-60 md:h-72 md:w-48" onClick={onClick}>
-      {cards.map((card, index) => {
+      {cards.map((_, index) => {
         return (
           <motion.div
             key={index}

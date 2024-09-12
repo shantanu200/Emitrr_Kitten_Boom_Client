@@ -21,7 +21,7 @@ const SessionExpired: React.FC<SessionExpiredProps> = () => {
           <DialogDescription>Please login again</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Link to={"/home"} className="w-full">
+          <Link to={"/"} className="w-full">
             <Button className="w-full">Sign In</Button>
           </Link>
         </DialogFooter>

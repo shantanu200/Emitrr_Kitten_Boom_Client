@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import PageLoading from "./PageLoading";
 import { Joystick, Ranking, Trophy } from "@phosphor-icons/react";
 import { Skeleton } from "@/components/ui/skeleton";
+import ErrorPage from "@/components/ui/errorPage";
 
 const StatsCard = React.lazy(
   () => import("@/components/_pages/Dashboard/StatsCard")
@@ -19,12 +20,20 @@ const Dashboard: React.FC = () => {
     return <PageLoading />;
   }
 
+  if(user.isError) {
+    return <ErrorPage text={"Unable to fetch user details"} />
+  }
+
   return (
     <main>
       <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
         <Suspense fallback={<Skeleton className="col-span-1" />}>
           <StatsCard
-            title={String(user.data?.leaderBoardRank)}
+            title={
+              Number(user.data?.leaderBoardRank) > 0
+                ? String(user.data?.leaderBoardRank)
+                : "Not Ranked"
+            }
             description="Rank in the leaderboard"
             icon={<Ranking className="w-6 h-6" weight="bold" />}
           />

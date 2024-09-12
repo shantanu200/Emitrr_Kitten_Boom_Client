@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import {
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -25,13 +24,13 @@ const GameOver: React.FC<GameOverProps> = ({ open }) => {
           </DialogTitle>
           <DialogDescription>Drawn card is bomb card.</DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-y-4">
-          <Link to={"/"}>
-            <Button variant={"destructive"}>Exit</Button>
+        <DialogFooter className="gap-y-2">
+          <Link to={"/dashboard"} className="w-full lg:w-auto">
+            <Button variant={"destructive"} className="w-full">Exit</Button>
           </Link>
 
-          <Link to={`/instruction`}>
-            <Button>Play Again</Button>
+          <Link to={`/instruction`} className="w-full lg:w-auto">
+            <Button className="w-full">Play Again</Button>
           </Link>
         </DialogFooter>
       </DialogContent>

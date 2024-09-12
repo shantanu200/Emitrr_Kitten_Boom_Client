@@ -10,10 +10,6 @@ import {
 import useTempStore from "@/store/store";
 import React, { useEffect, useState } from "react";
 
-interface GameRestartProps {
-  open: boolean;
-}
-
 const GameRestart: React.FC = () => {
   const { resetGame, isGameReset } = useTempStore((state) => state);
   const [openDialog, setOpenDialog] = useState<boolean>(false); // Update the dialog state when the `open` prop changes
@@ -21,23 +17,22 @@ const GameRestart: React.FC = () => {
 
   useEffect(() => {
     if (isGameReset) {
-      setOpenDialog(true); // Open dialog if `open` prop is true
-      setTimer(5); // Initialize the timer to 5 seconds
+      setOpenDialog(true); 
+      setTimer(5); 
 
       const countDownInterval = setInterval(() => {
         setTimer((prev) => (prev !== null ? prev - 1 : null));
       }, 1000);
 
-      // Close the dialog and reload after 5 seconds
       const timeout = setTimeout(() => {
-        clearInterval(countDownInterval); // Clear interval when timeout completes
-        setOpenDialog(false); // Close dialog
+        clearInterval(countDownInterval); 
+        setOpenDialog(false); 
         resetGame();
       }, 5000);
 
       return () => {
-        clearInterval(countDownInterval); // Clean up interval on unmount
-        clearTimeout(timeout); // Clean up timeout on unmount
+        clearInterval(countDownInterval); 
+        clearTimeout(timeout); 
       };
     }
   }, [open,isGameReset]);

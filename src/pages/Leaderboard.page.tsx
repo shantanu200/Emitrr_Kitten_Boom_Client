@@ -1,17 +1,23 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { useLeaderBoard } from "@/query/functions/Leaderboard.function";
-import { Medal, User } from "@phosphor-icons/react";
+import { useUserDetails } from "@/query/functions/User.function";
+import { Medal, Trophy, User } from "@phosphor-icons/react";
 import React from "react";
 
 const Leaderboard: React.FC = () => {
   const leaderboard = useLeaderBoard();
 
-  if(leaderboard.isLoading){
-    return <div className="space-y-4">
-      <Skeleton className="h-24 w-full" />
-      <Skeleton className="h-24 w-full" />
-      <Skeleton className="h-24 w-full" />
-    </div>
+  const userDetails = useUserDetails();
+
+  if (leaderboard.isLoading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-24 w-full" />
+      </div>
+    );
   }
 
   return (
@@ -26,14 +32,21 @@ const Leaderboard: React.FC = () => {
         {leaderboard?.data?.map((user, idx) => (
           <div
             key={idx}
-            className="border py-4 px-16 shadow flex items-center justify-between gap-x-8 bg-card rounded-lg"
+            className={cn(
+              "border py-6 px-16 shadow flex flex-wrap items-center lg:justify-between justify-center gap-x-8 bg-card rounded-lg gap-y-2",
+              userDetails?.data?.username === user &&
+                "bg-primary border-primary text-card"
+            )}
           >
-            <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-              # {idx + 1}
-            </h1>
+            <div className="flex flex-wrap items-center gap-x-4">
+              {idx === 0 && <Trophy className="h-12 w-12 text-[#FFD700]" weight="bold" />}
+              <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+                # {idx + 1}
+              </h1>
+            </div>
             <div className="flex items-center gap-x-4">
-              <User className="h-5 w-5" weight="bold" />
-              <h2 className="text-2xl font-medium tracking-tight">{user}</h2>
+              <User className="lg:h-6 lg:w-6 h-5 w-5" weight="bold" />
+              <h2 className="lg:text-3xl text-2xl font-semibold tracking-tight">{user}</h2>
             </div>
           </div>
         ))}

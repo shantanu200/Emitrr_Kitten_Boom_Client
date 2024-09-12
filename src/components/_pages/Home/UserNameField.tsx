@@ -6,7 +6,6 @@ import {
   Person,
   Spinner,
   Sword,
-  X,
   XCircle,
 } from "@phosphor-icons/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -87,7 +86,7 @@ const UserNameField: React.FC = () => {
     >("POST", API_ENDPOINT.CREATE, {
       onSuccess: (data) => {
         Cookies.set("access-token", String(data?.accessToken), { expires: 7 });
-        navigate("/");
+        navigate("/dashboard");
       },
     });
 

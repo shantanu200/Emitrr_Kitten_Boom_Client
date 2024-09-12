@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/interfaces/Card.interface";
 import { cn } from "@/lib/utils";
 import useTempStore from "@/store/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 interface GameCardProps {
   card: Card;

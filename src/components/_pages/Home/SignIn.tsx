@@ -32,7 +32,7 @@ const SignIn: React.FC = () => {
       onSuccess: (data) => {
         toast.success("User logged in successfully");
         Cookie.set("access-token", String(data?.accessToken), { expires: 7 });
-        navigate("/");
+        navigate("/dashboard");
       },
       onError: (err) => {
         toast.error(err.message);
